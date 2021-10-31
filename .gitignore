@@ -1,3 +1,5 @@
 .env
+.google-credentials.json
+.google.env
 .tool-versions
 sendgrid.env

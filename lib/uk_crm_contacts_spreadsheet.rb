@@ -1,4 +1,7 @@
+require 'csv'
+require "google/apis/sheets_v4"
 require 'http'
+require 'pry'
 require 'sendgrid-ruby'
 
 sg = SendGrid::API.new(api_key: ENV['SENDGRID_API_KEY'])
@@ -38,10 +41,14 @@ export_url = response.parsed_body[:result].last[:urls].first
 # Query 3
 # =======
 # We GET request the url of the export file to download the file. This url appears to be valid for 300 seconds,
-# since it contains "X-Amz-Expires=300"
+# since it contains "X-Amz-Expires=300". The export file comes as a gzip.
 
 puts export_url
 
 export_download = HTTP.get(export_url)
+
+csv_as_string = Zlib::GzipReader.new(StringIO.new(export_download.body.to_s)).read
+
+binding.pry
 
 pp export_download
